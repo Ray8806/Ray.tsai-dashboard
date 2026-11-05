@@ -2,7 +2,8 @@ name: Update dashboard data
 
 on:
   schedule:
-    - cron: "17 21 * * *"   # 每天 UTC 21:17（台灣 05:17）
+    - cron: "30 8 * * 1-5"  # 週一至週五 UTC 08:30（台灣 16:30，收盤資料已發布）
+    - cron: "17 21 * * *"   # 每天 UTC 21:17（台灣 05:17，補抓與更新 GitHub 資料）
   workflow_dispatch:
 
 permissions:
