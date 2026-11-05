@@ -11,6 +11,7 @@ const dict = {
     stk_disc:"Data from the Taiwan Stock Exchange, latest trading-day close. For information only, not investment advice.",
     dash_budget:"This month's budget",
     bud_used:"of budget used",
+    bud_cats:"Share of spending", bud_trend_h:"Budget used by month", bud_wait:"The monthly chart appears once there are two months of data.",
     bud_note:"Shows ratios and trends only, no amounts or transaction details.",
     music_open:"Open in YouTube Music",
     nav_site:"Personal site ↗",

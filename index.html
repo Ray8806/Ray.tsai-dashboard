@@ -7,7 +7,7 @@
   <meta name="description" content="個人儀表板：天氣、股市收盤、GitHub 活動、預算比例與音樂播放清單。純靜態、無需建置，資料由 GitHub Actions 每日更新。">
   <meta name="robots" content="index,follow">
   <meta name="theme-color" content="#08090a">
-  <link rel="stylesheet" href="style.css?v=1">
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
   <header class="nav">
@@ -46,9 +46,12 @@
         </div>
         <div class="dash-card" id="dash-budget" hidden>
           <h3 data-i18n="dash_budget">本月預算</h3>
-          <div class="dash-nums"><div><b id="bud-pct">–</b><span data-i18n="bud_used">預算使用率</span></div></div>
-          <div class="bud-bar" id="bud-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"><i></i></div>
-          <div id="bud-split" class="langs"></div>
+          <div class="bud-hero"><b id="bud-pct">–</b><span data-i18n="bud_used">預算使用率</span></div>
+          <div class="bud-meter" id="bud-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"><i></i></div>
+          <p id="bud-status" class="bud-status"></p>
+          <h4 class="bud-sub" data-i18n="bud_cats">支出占比</h4>
+          <ul id="bud-cats" class="bud-cats"></ul>
+          <h4 class="bud-sub" id="bud-trend-h" data-i18n="bud_trend_h">每月預算使用率</h4>
           <div id="bud-trend" class="bud-trend"></div>
           <small id="bud-upd"></small>
           <small data-i18n="bud_note">只顯示比例與趨勢，不含金額與消費明細。</small>
@@ -72,7 +75,7 @@
   </main>
 
   <footer>© <span id="year"></span> Ray Tsai<small data-i18n="disclaimer">個人專案，僅供展示。股市資料僅供資訊參考，非投資建議。</small></footer>
-  <script src="script.js?v=1"></script>
-  <script src="dashboard.js?v=1"></script>
+  <script src="script.js?v=2"></script>
+  <script src="dashboard.js?v=2"></script>
 </body>
 </html>

@@ -114,33 +114,58 @@
   }
 
   // ── 預算（只含比例，不含金額）
+  // 使用率 = 對上限的比例 → 進度條；分類 = 一個整體的占比 → 由大到小的橫條；每月使用率 → 長條圖
   function renderBudget() {
     var card = $("dash-budget");
     if (!budget || !budget.updated || !isNum(budget.used_pct)) { card.hidden = true; return; }
     card.hidden = false;
-    var used = Math.max(0, Math.min(100, budget.used_pct));
-    $("bud-pct").textContent = Math.round(used) + "%";
-    var bar = $("bud-bar"); bar.setAttribute("aria-valuenow", Math.round(used));
-    bar.firstChild.style.width = used + "%";
+    var pct = budget.used_pct;
+    var level = pct > 100 ? "over" : pct >= 80 ? "warn" : "ok";
+    $("bud-pct").textContent = Math.round(pct) + "%";
+    var bar = $("bud-bar"); bar.setAttribute("aria-valuenow", Math.round(Math.min(pct, 100)));
+    bar.dataset.level = level; bar.firstChild.style.width = Math.max(0, Math.min(100, pct)) + "%";
+    var STATUS = {
+      ok:   ["✓", "在預算內", "Within budget"],
+      warn: ["⚠", "接近預算上限", "Approaching the limit"],
+      over: ["✕", "已超出預算", "Over budget"]
+    };
+    var st = $("bud-status"); st.dataset.level = level;
+    st.textContent = STATUS[level][0] + " " + (en() ? STATUS[level][2] : STATUS[level][1]);
 
-    var split = $("bud-split"); split.textContent = "";
-    var old = $("bud-legend"); if (old) old.remove();
-    var cats = (budget.categories || []).filter(function (c) { return isNum(c.pct) && c.pct > 0; });
-    var total = cats.reduce(function (a, c) { return a + c.pct; }, 0) || 1;
-    var legend = el("ul", { id: "bud-legend", "class": "lang-legend" });
-    cats.forEach(function (c, i) {
-      var color = COLORS[i % COLORS.length];
-      var seg = el("i", { title: en() ? c.en : c.zh }); seg.style.width = (c.pct / total * 100) + "%"; seg.style.background = color; split.appendChild(seg);
-      var li = el("li"), dot = el("span"); dot.style.background = color;
-      li.appendChild(dot); li.appendChild(document.createTextNode((en() ? c.en : c.zh) + " " + Math.round(c.pct / total * 100) + "%")); legend.appendChild(li);
+    // 分類：橫條由大到小，真實比例（0–100%），數值標在條尾；文字用一般文字色
+    var ul = $("bud-cats"); ul.textContent = "";
+    var cats = (budget.categories || []).filter(function (c) { return isNum(c.pct) && c.pct > 0; })
+      .sort(function (a, b) { return b.pct - a.pct; });
+    cats.forEach(function (c) {
+      var name = en() ? c.en : c.zh;
+      var li = el("li", { title: name + " " + Math.round(c.pct) + "%" });
+      li.appendChild(el("span", { "class": "cat-n" }, name));
+      var track = el("span", { "class": "cat-track", "aria-hidden": "true" });
+      var fill = el("i"); fill.style.width = Math.min(100, c.pct) + "%"; track.appendChild(fill);
+      li.appendChild(track); li.appendChild(el("b", null, Math.round(c.pct) + "%")); ul.appendChild(li);
     });
-    split.after(legend);
 
+    // 每月使用率：長條圖，最新月份用主色、其餘用淡色；虛線以外的細線標出 100% 預算
     var tr = $("bud-trend"); tr.textContent = "";
-    var pts = (budget.trend || []).filter(function (t) { return isNum(t.used_pct); });
-    if (pts.length >= 2) {
-      tr.appendChild(spark(pts.map(function (t) { return t.used_pct; })));
-      tr.appendChild(el("em", null, (en() ? "Usage trend " : "使用率趨勢 ") + pts[0].month + " → " + pts[pts.length - 1].month));
+    var pts = (budget.trend || []).filter(function (t) { return isNum(t.used_pct) && t.month; }).slice(-6);
+    var head = $("bud-trend-h");
+    if (pts.length < 2) {
+      head.hidden = true;
+      tr.appendChild(el("p", { "class": "bud-wait" }, en() ? "The monthly chart appears once there are two months of data." : "累積兩個月的資料後，會顯示每月趨勢圖。"));
+    } else {
+      head.hidden = false;
+      var max = Math.max(100, Math.max.apply(null, pts.map(function (t) { return t.used_pct; })));
+      var plot = el("div", { "class": "cols", role: "img", "aria-label": (en() ? "Budget used by month: " : "每月預算使用率：") + pts.map(function (t) { return t.month + " " + Math.round(t.used_pct) + "%"; }).join("，") });
+      var ref = el("span", { "class": "ref" }); ref.style.bottom = (100 / max * 100) + "%"; plot.appendChild(ref);
+      pts.forEach(function (t, i) {
+        var col = el("div", { "class": "col" + (i === pts.length - 1 ? " now" : ""), title: t.month + " " + Math.round(t.used_pct) + "%" });
+        col.appendChild(el("b", null, Math.round(t.used_pct) + "%"));
+        var barEl = el("i"); barEl.style.height = (t.used_pct / max * 100) + "%"; col.appendChild(barEl);
+        var m = Number(t.month.slice(5, 7));
+        col.appendChild(el("span", null, en() ? new Date(2000, m - 1, 1).toLocaleDateString("en-US", { month: "short" }) : m + "月"));
+        plot.appendChild(col);
+      });
+      tr.appendChild(plot);
     }
     $("bud-upd").textContent = (en() ? "Updated " : "更新於 ") + fmt(budget.updated);
   }
