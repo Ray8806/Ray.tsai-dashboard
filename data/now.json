@@ -1,0 +1,8 @@
+{
+  "updated": "2026-11-05",
+  "items": [
+    { "icon": "🛠", "zh": "持續優化每日報表匯入監測流程（n8n）", "en": "Refining the daily report-import monitoring workflow (n8n)" },
+    { "icon": "📚", "zh": "學習：資料視覺化與前端基礎", "en": "Learning: data visualization and front-end fundamentals" },
+    { "icon": "🔐", "zh": "規劃：可還原去識別化工具（本機離線版）", "en": "Planning: reversible de-identification tool (offline, local)" }
+  ]
+}

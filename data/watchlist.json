@@ -1,0 +1,8 @@
+{
+  "index": { "name": { "zh": "加權指數", "en": "TAIEX" } },
+  "symbols": [
+    { "code": "0050", "name": { "zh": "元大台灣50", "en": "Yuanta Taiwan 50" } },
+    { "code": "009816", "name": { "zh": "凱基台灣TOP50", "en": "KGI Taiwan TOP 50" } },
+    { "code": "2330", "name": { "zh": "台積電", "en": "TSMC" } }
+  ]
+}
