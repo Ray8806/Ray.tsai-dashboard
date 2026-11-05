@@ -1,7 +1,7 @@
 // 個人儀表板：天氣（即時）、近況（手動）、股市與 GitHub（Actions 每日產生）、預算比例（手動）、音樂播放清單
 (function () {
   var $ = function (id) { return document.getElementById(id); };
-  var now = null, gh = null, music = null, stocks = null, budget = null, wx = null;
+  var now = null, gh = null, music = null, stocks = null, budget = null, wx = null, uptime = null;
   var COLORS = ["#00adef", "#8d9399", "#e0a030", "#5cb85c", "#b06ad8", "#d9534f"];
   var SVGNS = "http://www.w3.org/2000/svg";
 
@@ -228,6 +228,60 @@
     $("gh-upd").textContent = (en() ? "GitHub data updated " : "GitHub 資料更新於 ") + fmt(gh.generated_at);
   }
 
+  // ── 網站狀態（Better Stack 公開狀態頁；Actions 定時抓取）
+  // 狀態一律以「圖示 + 文字」呈現，每日色塊另有圖例與 tooltip，不只靠顏色
+  var ST = {
+    operational: ["✓", "運作正常", "Operational", "ok"],
+    degraded: ["⚠", "效能下降", "Degraded", "warn"],
+    downtime: ["✕", "服務中斷", "Down", "crit"],
+    maintenance: ["🔧", "維護中", "Maintenance", "info"],
+    not_monitored: ["–", "未監測", "Not monitored", "none"]
+  };
+  var stInfo = function (s) { return ST[s] || ["?", "狀態未知", "Unknown", "warn"]; };
+  var stText = function (s) { var i = stInfo(s); return i[0] + " " + (en() ? i[2] : i[1]); };
+  var wideMq = window.matchMedia ? window.matchMedia("(min-width: 640px)") : null;
+  if (wideMq && wideMq.addEventListener) wideMq.addEventListener("change", function () { renderUptime(); });
+
+  function renderUptime() {
+    var card = $("dash-uptime");
+    if (!uptime || !uptime.generated_at || !uptime.resources || !uptime.resources.length) { card.hidden = true; return; }
+    card.hidden = false;
+    var ov = stInfo(uptime.state);
+    var overall = $("up-overall"); overall.dataset.level = ov[3];
+    overall.textContent = uptime.state === "operational"
+      ? ov[0] + " " + (en() ? "All systems operational" : "所有系統運作正常")
+      : ov[0] + " " + (en() ? "Some services are affected: " : "部分服務異常：") + (en() ? ov[2] : ov[1]);
+    if (/^https:\/\/[\w.-]+\.betteruptime\.com\/?$/.test(uptime.page_url || "")) $("up-link").href = uptime.page_url;
+
+    var count = wideMq && wideMq.matches ? 90 : 30, seen = {};
+    var ul = $("up-list"); ul.textContent = "";
+    uptime.resources.forEach(function (r) {
+      var days = (r.days || []).slice(-count);
+      var first = (r.days || []).filter(function (x) { return x.status !== "not_monitored"; })[0];
+      var li = el("li");
+      var name = el("div", { "class": "up-name" });
+      name.appendChild(el("b", null, r.name));
+      var badge = el("span", { "class": "up-badge", "data-level": stInfo(r.status)[3] }, stText(r.status));
+      name.appendChild(badge);
+      var av = el("div", { "class": "up-avail" });
+      av.appendChild(el("b", null, isNum(r.availability) ? (Math.round(r.availability * 10000) / 100) + "%" : "–"));
+      av.appendChild(el("span", null, en() ? "availability" : "狀態頁統計可用率"));
+      if (first) av.appendChild(el("span", { "class": "up-since" }, (en() ? "monitored since " : "監測始於 ") + first.day));
+      var strip = el("div", { "class": "up-days", role: "img", "aria-label": (en() ? "Daily status, last " : "近 ") + days.length + (en() ? " days" : " 天每日狀態") });
+      days.forEach(function (x) {
+        seen[x.status] = true;
+        strip.appendChild(el("i", { "data-s": stInfo(x.status)[3], title: x.day + "：" + (en() ? stInfo(x.status)[2] : stInfo(x.status)[1]) }));
+      });
+      li.appendChild(name); li.appendChild(av); li.appendChild(strip); ul.appendChild(li);
+    });
+    var lg = $("up-legend"); lg.textContent = "";
+    Object.keys(seen).forEach(function (s) {
+      var span = el("span"); var dot = el("i", { "data-s": stInfo(s)[3] });
+      span.appendChild(dot); span.appendChild(document.createTextNode(en() ? stInfo(s)[2] : stInfo(s)[1])); lg.appendChild(span);
+    });
+    $("up-upd").textContent = (en() ? "Status data updated " : "狀態資料更新於 ") + fmt(uptime.generated_at);
+  }
+
   // ── 音樂：只接受 youtube / music.youtube.com 的 HTTPS 播放清單，並只取出 list ID 組成嵌入網址
   function listId(url) {
     try {
@@ -249,14 +303,14 @@
     $("music-link").href = "https://music.youtube.com/playlist?list=" + id;
   }
 
-  function render() { renderWeather(); renderNow(); renderStocks(); renderBudget(); renderGh(); renderMusic(); }
+  function render() { renderWeather(); renderNow(); renderStocks(); renderBudget(); renderGh(); renderMusic(); renderUptime(); }
 
   var prev = window.onLangChange;
   window.onLangChange = function () { if (prev) prev(); render(); };
 
   function load(path) { return fetch(path, { cache: "no-cache" }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); }
-  Promise.all([load("data/now.json"), load("data/github.json"), load("data/music.json"), load("data/stocks.json"), load("data/budget.json")])
-    .then(function (res) { now = res[0]; gh = res[1]; music = res[2]; stocks = res[3]; budget = res[4]; render(); });
+  Promise.all([load("data/now.json"), load("data/github.json"), load("data/music.json"), load("data/stocks.json"), load("data/budget.json"), load("data/uptime.json")])
+    .then(function (res) { now = res[0]; gh = res[1]; music = res[2]; stocks = res[3]; budget = res[4]; uptime = res[5]; render(); });
   fetch(WX_URL).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
     .then(function (j) { wx = j; renderWeather(); });
 })();

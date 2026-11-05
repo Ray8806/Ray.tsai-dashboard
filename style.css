@@ -132,3 +132,30 @@ footer small{display:block;margin-top:6px;opacity:.7}
 .gh-weeks{margin-bottom:34px}
 .cols.dense{gap:6px}
 .cols.dense .col{max-width:22px}
+
+/* 網站狀態：整體狀態 + 每個項目的可用率與每日色塊；狀態色沿用規範的固定色，並一律搭配圖示與文字 */
+:root{--good:#0ca30c}
+.up-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.up-head h3{margin:0 0 14px}
+.up-link{color:var(--accent);font-size:.85rem}.up-link:hover{text-decoration:underline}
+.up-overall{margin:0 0 18px;font-size:1.05rem}
+.up-list{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:18px}
+.up-list li{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;align-items:center}
+.up-name{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.up-name b{font-weight:400}
+.up-badge{font-size:.8rem;padding:2px 10px;border:1px solid var(--line);border-radius:99px}
+.up-avail b{display:block;font-size:1.6rem;font-weight:300;line-height:1.3}
+.up-avail span{color:var(--muted);font-size:.78rem}
+.up-days{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:2px;height:30px}
+.up-days i,.up-legend i{display:block;border-radius:2px;background:color-mix(in srgb,var(--fg) 12%,transparent)}
+.up-days i[data-s=ok],.up-legend i[data-s=ok]{background:var(--good)}
+.up-days i[data-s=warn],.up-legend i[data-s=warn]{background:var(--warn)}
+.up-days i[data-s=crit],.up-legend i[data-s=crit]{background:var(--crit)}
+.up-days i[data-s=info],.up-legend i[data-s=info]{background:var(--accent)}
+.up-legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:.78rem;color:var(--muted)}
+.up-legend span{display:inline-flex;align-items:center;gap:6px}
+.up-legend i{width:10px;height:10px}
+@media(min-width:640px){
+  .up-list li{grid-template-columns:minmax(120px,200px) minmax(150px,230px) minmax(0,1fr);gap:24px}
+}
+.up-avail .up-since{display:block;white-space:nowrap}

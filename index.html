@@ -10,7 +10,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
   <header class="nav">
@@ -85,12 +85,23 @@
           <small id="gh-upd"></small>
           <small data-i18n="gh_note">活動包含 commit、建立分支、開 issue 或 PR 等公開動作。</small>
         </div>
+        <div class="dash-card full" id="dash-uptime" hidden>
+          <div class="up-head">
+            <h3 data-i18n="dash_uptime">網站狀態</h3>
+            <a id="up-link" class="up-link" href="#" target="_blank" rel="noopener" data-i18n="up_link">查看即時狀態頁 ↗</a>
+          </div>
+          <p id="up-overall" class="up-overall"></p>
+          <ul id="up-list" class="up-list"></ul>
+          <div id="up-legend" class="up-legend"></div>
+          <small id="up-upd"></small>
+          <small data-i18n="up_note">由 Better Stack 每 5 分鐘檢查一次；此處資料為定時更新，不是即時。網站異常時，我也會另外收到 Email 通知。</small>
+        </div>
       </div>
     </section>
   </main>
 
   <footer>© <span id="year"></span> Ray Tsai<small data-i18n="disclaimer">個人專案，僅供展示。股市資料僅供資訊參考，非投資建議。</small></footer>
-  <script src="script.js?v=6"></script>
-  <script src="dashboard.js?v=6"></script>
+  <script src="script.js?v=7"></script>
+  <script src="dashboard.js?v=7"></script>
 </body>
 </html>

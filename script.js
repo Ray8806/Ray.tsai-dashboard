@@ -11,6 +11,7 @@ const dict = {
     stk_disc:"Data from the Taiwan Stock Exchange, latest trading-day close. For information only, not investment advice.",
     dash_budget:"This month's budget",
     bud_used:"of budget used",
+    dash_uptime:"Site status", up_link:"Open live status page ↗", up_note:"Checked every 5 minutes by Better Stack. This data is refreshed on a schedule, not live; I also get an email when the site goes down.",
     gh_langs:"Languages used across repos", gh_recent:"Recently updated repos", gh_weekly:"Public activity per week (last 12 weeks)", gh_note:"Activity includes commits, branches created, issues and pull requests opened, and other public actions.",
     bud_cats:"Share of spending", bud_trend_h:"Budget used by month", bud_wait:"The monthly chart appears once there are two months of data.",
     bud_note:"Shows ratios and trends only, no amounts or transaction details.",
