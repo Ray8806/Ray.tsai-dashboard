@@ -17,19 +17,51 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: node scripts/fetch-github.mjs
+
+      # 三個抓取步驟彼此獨立：一個失敗不影響其他資料被存檔，失敗會在最後統一回報
+      - name: Fetch GitHub activity
+        id: gh
+        continue-on-error: true
+        run: node scripts/fetch-github.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_USER: Ray8806
       - name: Fetch stock closing prices
+        id: stocks
         continue-on-error: true
         run: node scripts/fetch-stocks.mjs
       - name: Fetch site uptime status
+        id: uptime
         continue-on-error: true
         run: node scripts/fetch-uptime.mjs
+
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/github.json data/stocks.json data/uptime.json
           git diff --staged --quiet || (git commit -m "chore: update dashboard data" && git push)
+
+      - name: Check data freshness
+        id: fresh
+        continue-on-error: true
+        run: node scripts/check-data.mjs
+
+      # 任何一步失敗，整個工作流程就失敗，GitHub 會寄失敗通知
+      - name: Fail if anything went wrong
+        if: steps.gh.outcome == 'failure' || steps.stocks.outcome == 'failure' || steps.uptime.outcome == 'failure' || steps.fresh.outcome == 'failure'
+        run: |
+          echo "::error::github=${{ steps.gh.outcome }} stocks=${{ steps.stocks.outcome }} uptime=${{ steps.uptime.outcome }} freshness=${{ steps.fresh.outcome }}"
+          exit 1
+
+      # 全部成功才回報心跳；Better Stack 在期限內沒收到就會通知（連排程沒跑也抓得到）
+      - name: Send heartbeat
+        if: success()
+        env:
+          HEARTBEAT_URL: ${{ secrets.HEARTBEAT_URL }}
+        run: |
+          if [ -n "$HEARTBEAT_URL" ]; then
+            curl -fsS -m 10 --retry 3 -o /dev/null "$HEARTBEAT_URL" && echo "heartbeat sent"
+          else
+            echo "HEARTBEAT_URL not set; skipping heartbeat"
+          fi
