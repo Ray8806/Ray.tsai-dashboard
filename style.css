@@ -114,12 +114,22 @@ footer small{display:block;margin-top:6px;opacity:.7}
   .bud-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:32px}
   .bud-grid .bud-col+.bud-col{border-left:1px solid var(--line);padding-left:32px}
   .bud-grid .bud-cats,.bud-grid .bud-trend{margin-bottom:0}
-  #dash-music.wide{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);grid-template-rows:auto auto 1fr;grid-template-areas:"t p" "n p" "l p";column-gap:32px;align-items:start}
-  #dash-music h3{grid-area:t}#dash-music .music-note{grid-area:n}
-  #dash-music #music-embed{grid-area:p;margin-bottom:0}
-  #dash-music .btn{grid-area:l;justify-self:start}
 }
 @media(min-width:1000px){
   .dash{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
-@media(min-width:1000px){#dash-music.wide{grid-column:span 3}}
+
+/* 股市：橫跨整排，每檔一個大方塊（手機維持緊湊的一列一檔） */
+@media(min-width:640px){
+  .dash-card.full{grid-column:1/-1}
+  #dash-stocks .stk-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  #dash-stocks .stk-list li{display:grid;grid-template-columns:minmax(0,1fr);grid-template-areas:"n" "p" "s";gap:6px;padding:20px 22px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--fg) 3%,transparent)}
+  #dash-stocks .stk-name{grid-area:n;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  #dash-stocks .stk-name b{font-size:1.05rem}
+  #dash-stocks .stk-px{grid-area:p;text-align:left}
+  #dash-stocks .stk-px b{font-size:2.1rem;font-weight:300;line-height:1.25}
+  #dash-stocks .stk-px span{font-size:.88rem}
+  #dash-stocks .spark{grid-area:s;height:64px;margin-top:6px}
+  #dash-stocks .spark polyline{stroke-width:2}
+}
+@media(min-width:1000px){#dash-stocks .stk-list{grid-template-columns:repeat(4,minmax(0,1fr))}}

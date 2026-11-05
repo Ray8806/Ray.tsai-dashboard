@@ -7,7 +7,7 @@
   <meta name="description" content="個人儀表板：天氣、股市收盤、GitHub 活動、預算比例與音樂播放清單。純靜態、無需建置，資料由 GitHub Actions 每日更新。">
   <meta name="robots" content="index,follow">
   <meta name="theme-color" content="#08090a">
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
   <header class="nav">
@@ -30,6 +30,12 @@
       <h2 data-i18n="dash_h">儀表板</h2>
       <p class="demo-note" data-i18n="dash_note">這個區塊只使用公開資訊：天氣在開啟頁面時即時取得，GitHub 與股市由 GitHub Actions 每天自動更新，「近況」與預算比例則由我手動維護。</p>
       <div class="dash">
+        <div class="dash-card full" id="dash-stocks" hidden>
+          <h3 data-i18n="dash_stocks">股市</h3>
+          <ul id="stk-list" class="stk-list"></ul>
+          <small id="stk-upd"></small>
+          <small data-i18n="stk_disc">資料取自臺灣證券交易所，為最近一個交易日收盤，僅供資訊參考，非投資建議。</small>
+        </div>
         <div class="dash-card" id="dash-weather" hidden>
           <h3 data-i18n="dash_weather">新北天氣</h3>
           <div class="wx-now"><span id="wx-icon" aria-hidden="true"></span><b id="wx-temp">–</b><span id="wx-desc"></span></div>
@@ -38,11 +44,11 @@
           <small data-i18n="wx_src">天氣資料來源：Open-Meteo，每次開啟頁面時即時取得。</small>
         </div>
         <div class="dash-card" id="dash-now"><h3 data-i18n="dash_now">近況</h3><ul id="now-list" class="now-list"></ul><small id="now-upd"></small></div>
-        <div class="dash-card" id="dash-stocks" hidden>
-          <h3 data-i18n="dash_stocks">股市</h3>
-          <ul id="stk-list" class="stk-list"></ul>
-          <small id="stk-upd"></small>
-          <small data-i18n="stk_disc">資料取自臺灣證券交易所，為最近一個交易日收盤，僅供資訊參考，非投資建議。</small>
+        <div class="dash-card" id="dash-music" hidden>
+          <h3 id="music-title">最近在聽</h3>
+          <p id="music-note" class="music-note"></p>
+          <iframe id="music-embed" title="YouTube Music playlist" loading="lazy" allow="encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" hidden></iframe>
+          <a id="music-link" class="btn" href="#" target="_blank" rel="noopener" data-i18n="music_open">在 YouTube Music 開啟</a>
         </div>
         <div class="dash-card wide" id="dash-budget" hidden>
           <h3 data-i18n="dash_budget">本月預算</h3>
@@ -72,18 +78,12 @@
           <ul id="gh-recent" class="recent"></ul>
           <small id="gh-upd"></small>
         </div>
-        <div class="dash-card wide" id="dash-music" hidden>
-          <h3 id="music-title">最近在聽</h3>
-          <p id="music-note" class="music-note"></p>
-          <iframe id="music-embed" title="YouTube Music playlist" loading="lazy" allow="encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" hidden></iframe>
-          <a id="music-link" class="btn" href="#" target="_blank" rel="noopener" data-i18n="music_open">在 YouTube Music 開啟</a>
-        </div>
       </div>
     </section>
   </main>
 
   <footer>© <span id="year"></span> Ray Tsai<small data-i18n="disclaimer">個人專案，僅供展示。股市資料僅供資訊參考，非投資建議。</small></footer>
-  <script src="script.js?v=3"></script>
-  <script src="dashboard.js?v=3"></script>
+  <script src="script.js?v=4"></script>
+  <script src="dashboard.js?v=4"></script>
 </body>
 </html>
