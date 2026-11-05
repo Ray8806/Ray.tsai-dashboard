@@ -170,25 +170,43 @@
     $("bud-upd").textContent = (en() ? "Updated " : "更新於 ") + fmt(budget.updated);
   }
 
-  // ── GitHub
-  function level(n, max) { return n === 0 ? 0 : Math.min(4, Math.ceil((n / max) * 4)); }
+  // ── GitHub：近 N 週每週活動次數（長條圖）；只標最高週與本週的數字，下方標週起始日
+  var ymd = function (d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
+  var md = function (d) { return en() ? d.toLocaleDateString("en-US", { month: "short", day: "numeric" }) : (d.getMonth() + 1) + "/" + d.getDate(); };
   function renderGh() {
     var card = $("dash-gh");
     if (!gh || !gh.generated_at) { card.hidden = true; return; }
     card.hidden = false;
     $("gh-repos").textContent = gh.public_repos;
-    $("gh-act").textContent = gh.activity_total;
 
-    var heat = $("gh-heat"); heat.textContent = "";
     var today = new Date(); today.setHours(0, 0, 0, 0);
     var start = new Date(today); start.setDate(start.getDate() - start.getDay() - (gh.weeks - 1) * 7);
-    var max = Math.max.apply(null, [1].concat(Object.keys(gh.days).map(function (k) { return gh.days[k]; })));
-    for (var d = new Date(start); d <= today; d.setDate(d.getDate() + 1)) {
-      var key = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
-      var n = gh.days[key] || 0;
-      heat.appendChild(el("i", { "data-l": level(n, max), title: key + ": " + n }));
+    var weeks = [], total = 0;
+    for (var i = 0; i < gh.weeks; i++) {
+      var ws = new Date(start); ws.setDate(ws.getDate() + i * 7);
+      var sum = 0;
+      for (var k = 0; k < 7; k++) {
+        var day = new Date(ws); day.setDate(day.getDate() + k);
+        if (day > today) break;
+        sum += gh.days[ymd(day)] || 0;
+      }
+      weeks.push({ start: ws, n: sum }); total += sum;
     }
-    heat.setAttribute("aria-label", en() ? "Public activity heatmap, last " + gh.weeks + " weeks" : "近 " + gh.weeks + " 週公開活動熱圖");
+    $("gh-act").textContent = total;
+
+    var box = $("gh-weeks"); box.textContent = "";
+    var max = Math.max.apply(null, [1].concat(weeks.map(function (w) { return w.n; })));
+    var maxIdx = weeks.reduce(function (m, w, i) { return w.n > weeks[m].n ? i : m; }, 0);
+    var plot = el("div", { "class": "cols dense", role: "img", "aria-label": (en() ? "Public activity per week: " : "每週公開活動：") + weeks.map(function (w) { return md(w.start) + " " + w.n; }).join("，") });
+    weeks.forEach(function (w, i) {
+      var last = i === weeks.length - 1;
+      var col = el("div", { "class": "col" + (last ? " now" : ""), title: md(w.start) + (en() ? " week: " : " 起的一週：") + w.n });
+      if (w.n > 0 && (i === maxIdx || last)) col.appendChild(el("b", null, String(w.n)));
+      var barEl = el("i"); barEl.style.height = (w.n / max * 100) + "%"; col.appendChild(barEl);
+      if (i % 4 === 0 || last) col.appendChild(el("span", null, last ? (en() ? "This wk" : "本週") : md(w.start)));
+      plot.appendChild(col);
+    });
+    box.appendChild(plot);
 
     var bar = $("gh-langs"); bar.textContent = "";
     var legend = document.getElementById("gh-legend");

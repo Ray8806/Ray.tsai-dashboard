@@ -10,7 +10,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
   <header class="nav">
@@ -75,18 +75,22 @@
         </div>
         <div class="dash-card" id="dash-gh" hidden>
           <h3>GitHub</h3>
-          <div class="dash-nums"><div><b id="gh-repos">–</b><span data-i18n="dash_repos">公開專案</span></div><div><b id="gh-act">–</b><span data-i18n="dash_act">近期活動</span></div></div>
-          <div id="gh-heat" class="heat" role="img"></div>
+          <div class="dash-nums"><div><b id="gh-repos">–</b><span data-i18n="dash_repos">公開專案</span></div><div><b id="gh-act">–</b><span data-i18n="dash_act">近 12 週活動次數</span></div></div>
+          <h4 class="bud-sub" data-i18n="gh_weekly">每週公開活動（近 12 週）</h4>
+          <div id="gh-weeks" class="gh-weeks"></div>
+          <h4 class="bud-sub" data-i18n="gh_langs">專案使用的語言</h4>
           <div id="gh-langs" class="langs"></div>
+          <h4 class="bud-sub" data-i18n="gh_recent">最近更新的專案</h4>
           <ul id="gh-recent" class="recent"></ul>
           <small id="gh-upd"></small>
+          <small data-i18n="gh_note">活動包含 commit、建立分支、開 issue 或 PR 等公開動作。</small>
         </div>
       </div>
     </section>
   </main>
 
   <footer>© <span id="year"></span> Ray Tsai<small data-i18n="disclaimer">個人專案，僅供展示。股市資料僅供資訊參考，非投資建議。</small></footer>
-  <script src="script.js?v=4"></script>
-  <script src="dashboard.js?v=4"></script>
+  <script src="script.js?v=6"></script>
+  <script src="dashboard.js?v=6"></script>
 </body>
 </html>

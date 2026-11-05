@@ -37,12 +37,6 @@ footer small{display:block;margin-top:6px;opacity:.7}
 .dash-nums{display:flex;gap:28px;margin-bottom:18px}
 .dash-nums b{display:block;font-size:2rem;font-weight:300;line-height:1.2}
 .dash-nums span{color:var(--muted);font-size:.8rem;letter-spacing:.06em}
-.heat{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,1fr);gap:3px;margin-bottom:18px}
-.heat i{aspect-ratio:1;border-radius:3px;background:color-mix(in srgb,var(--fg) 8%,transparent)}
-.heat i[data-l="1"]{background:color-mix(in srgb,var(--accent) 30%,transparent)}
-.heat i[data-l="2"]{background:color-mix(in srgb,var(--accent) 55%,transparent)}
-.heat i[data-l="3"]{background:color-mix(in srgb,var(--accent) 80%,transparent)}
-.heat i[data-l="4"]{background:var(--accent)}
 .langs{display:flex;height:8px;border-radius:99px;overflow:hidden;margin-bottom:8px}
 .langs i{display:block;min-width:4px}
 .lang-legend{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 18px;padding:0;list-style:none;font-size:.78rem;color:var(--muted)}
@@ -133,3 +127,8 @@ footer small{display:block;margin-top:6px;opacity:.7}
   #dash-stocks .spark polyline{stroke-width:2}
 }
 @media(min-width:1000px){#dash-stocks .stk-list{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* GitHub 每週活動長條圖（沿用預算長條圖的樣式） */
+.gh-weeks{margin-bottom:34px}
+.cols.dense{gap:6px}
+.cols.dense .col{max-width:22px}
