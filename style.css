@@ -48,7 +48,7 @@ footer small{display:block;margin-top:6px;opacity:.7}
 #music-embed[hidden]{display:none}
 #dash-music .btn{display:inline-block;padding:10px 24px;font-size:.85rem}
 
-/* 天氣、股市、預算 */
+/* 天氣、股市 */
 :root{--up:#c0392b;--down:#1a8a4a}
 :root[data-theme=dark]{--up:#ff6b5e;--down:#3ddc84}
 .wx-now{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
@@ -71,47 +71,25 @@ footer small{display:block;margin-top:6px;opacity:.7}
 .spark{display:block;width:100%;height:26px}
 .spark polyline{stroke:currentColor;stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
 
-/* 預算圖表：進度條、橫條圖、長條圖（細、圓角資料端、以主色為主，警示色只在接近或超過上限時出現） */
 :root{--warn:#fab219;--crit:#d03b3b}
-.bud-hero{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-.bud-hero b{font-size:2.6rem;font-weight:300;line-height:1.2}
-.bud-hero span{color:var(--muted);font-size:.82rem;letter-spacing:.06em}
-.bud-meter{height:10px;border-radius:99px;background:color-mix(in srgb,var(--accent) 18%,transparent);overflow:hidden;margin:8px 0 10px}
-.bud-meter i{display:block;height:100%;border-radius:99px;background:var(--accent)}
-.bud-meter[data-level=warn] i{background:var(--warn)}
-.bud-meter[data-level=over] i{background:var(--crit)}
-.bud-status{margin:0 0 20px;font-size:.85rem;color:var(--fg)}
-.bud-sub{margin:0 0 10px;font-size:.78rem;font-weight:400;letter-spacing:.12em;color:var(--muted)}
-.bud-cats{list-style:none;margin:0 0 22px;padding:0;display:flex;flex-direction:column;gap:10px}
-.bud-cats li{display:grid;grid-template-columns:3.2em minmax(0,1fr) 2.8em;align-items:center;gap:10px;font-size:.88rem}
-.cat-track{height:12px;border-radius:0 4px 4px 0;background:color-mix(in srgb,var(--fg) 6%,transparent);overflow:hidden}
-.cat-track i{display:block;height:100%;background:var(--accent);border-radius:0 4px 4px 0}
-.bud-cats b{font-weight:400;text-align:right;font-variant-numeric:tabular-nums}
+.dash-sub{margin:0 0 10px;font-size:.78rem;font-weight:400;letter-spacing:.12em;color:var(--muted)}
 .cols{position:relative;display:flex;align-items:flex-end;gap:14px;height:92px;margin-top:24px;border-bottom:1px solid var(--line)}
-.cols .ref{position:absolute;left:0;right:0;height:0;border-top:1px solid color-mix(in srgb,var(--fg) 22%,transparent)}
 .col{position:relative;flex:1 1 0;max-width:24px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
 .col i{display:block;flex:none;width:100%;border-radius:4px 4px 0 0;background:color-mix(in srgb,var(--accent) 38%,transparent)}
 .col.now i{background:var(--accent)}
 .col b{position:relative;z-index:1;text-shadow:0 0 2px var(--card),0 0 2px var(--card),0 0 5px var(--card);font-size:.7rem;font-weight:400;color:var(--muted);margin-bottom:3px;flex:none;font-variant-numeric:tabular-nums;white-space:nowrap}
 .col.now b{color:var(--fg)}
 .col span{position:absolute;top:100%;margin-top:5px;font-size:.7rem;color:var(--muted);white-space:nowrap}
-.bud-trend{margin-bottom:34px}
-.bud-wait{margin:0;color:var(--muted);font-size:.82rem}
-:lang(en) .bud-cats li{grid-template-columns:6.4em minmax(0,1fr) 2.8em}
 
 /* 版面：手機單欄直式 → 平板兩欄 → 電腦三欄橫式；寬卡片在較寬時橫跨欄位，卡片內容也橫向排列 */
-.bud-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:4px}
-.bud-trend{margin-bottom:34px}
 @media(min-width:640px){
   .dash{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-flow:dense}
-  .dash-card.wide{grid-column:span 2}
-  .bud-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:32px}
-  .bud-grid .bud-col+.bud-col{border-left:1px solid var(--line);padding-left:32px}
-  .bud-grid .bud-cats,.bud-grid .bud-trend{margin-bottom:0}
 }
 @media(min-width:1000px){
   .dash{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .dash-card.wide{grid-column:span 2}
 }
+@media(min-width:640px) and (max-width:999px){#dash-uptime{grid-column:1/-1}}
 
 /* 股市：橫跨整排，每檔一個大方塊（手機維持緊湊的一列一檔） */
 @media(min-width:640px){
@@ -128,7 +106,7 @@ footer small{display:block;margin-top:6px;opacity:.7}
 }
 @media(min-width:1000px){#dash-stocks .stk-list{grid-template-columns:repeat(4,minmax(0,1fr))}}
 
-/* GitHub 每週活動長條圖（沿用預算長條圖的樣式） */
+/* GitHub 每週活動長條圖 */
 .gh-weeks{margin-bottom:34px}
 .cols.dense{gap:6px}
 .cols.dense .col{max-width:22px}
@@ -155,7 +133,18 @@ footer small{display:block;margin-top:6px;opacity:.7}
 .up-legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:.78rem;color:var(--muted)}
 .up-legend span{display:inline-flex;align-items:center;gap:6px}
 .up-legend i{width:10px;height:10px}
-@media(min-width:640px){
-  .up-list li{grid-template-columns:minmax(120px,200px) minmax(150px,230px) minmax(0,1fr);gap:24px}
-}
 .up-avail .up-since{display:block;white-space:nowrap}
+
+/* 卡片依自己的寬度決定內部排法（不論放在幾欄的位置） */
+.dash-card{container-type:inline-size}
+.gh-grid{display:grid;grid-template-columns:minmax(0,1fr)}
+@container (min-width:640px){
+  .gh-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px}
+  .gh-grid .gh-col+.gh-col{border-left:1px solid var(--line);padding-left:32px}
+  .up-list li{grid-template-columns:minmax(120px,200px) minmax(0,1fr);gap:12px 24px}
+  .up-list .up-days{grid-column:1/-1}
+}
+@container (min-width:900px){
+  .up-list li{grid-template-columns:minmax(120px,200px) minmax(150px,230px) minmax(0,1fr)}
+  .up-list .up-days{grid-column:auto}
+}

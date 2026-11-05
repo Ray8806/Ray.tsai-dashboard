@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ray.tsai Dashboard</title>
-  <meta name="description" content="個人儀表板：天氣、股市收盤、GitHub 活動、預算比例與音樂播放清單。純靜態、無需建置，資料由 GitHub Actions 每日更新。">
+  <meta name="description" content="個人儀表板：天氣、股市收盤、GitHub 活動、網站狀態與音樂播放清單。純靜態、無需建置，資料由 GitHub Actions 每日更新。">
   <meta name="robots" content="index,follow">
   <meta name="theme-color" content="#08090a">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
   <header class="nav">
@@ -26,12 +26,12 @@
     <section class="hero">
       <p class="eyebrow" data-i18n="hero_eyebrow">個人專案</p>
       <h1>Dashboard</h1>
-      <p class="lead" data-i18n="hero_lead">把生活與學習的資訊整理成一頁：天氣、股市收盤、程式活動與預算比例。純靜態網頁，資料由 GitHub Actions 每天自動更新。</p>
+      <p class="lead" data-i18n="hero_lead">把生活與學習的資訊整理成一頁：天氣、股市收盤、程式活動與網站狀態。純靜態網頁，資料由 GitHub Actions 每天自動更新。</p>
     </section>
 
     <section id="dashboard">
       <h2 data-i18n="dash_h">儀表板</h2>
-      <p class="demo-note" data-i18n="dash_note">這個區塊只使用公開資訊：天氣在開啟頁面時即時取得，GitHub 與股市由 GitHub Actions 每天自動更新，「近況」與預算比例則由我手動維護。</p>
+      <p class="demo-note" data-i18n="dash_note">這個區塊只使用公開資訊：天氣在開啟頁面時即時取得，GitHub、股市與網站狀態由 GitHub Actions 定時自動更新，「近況」則由我手動維護。</p>
       <div class="dash">
         <div class="dash-card full" id="dash-stocks" hidden>
           <h3 data-i18n="dash_stocks">股市</h3>
@@ -53,39 +53,25 @@
           <iframe id="music-embed" title="YouTube Music playlist" loading="lazy" allow="encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" hidden></iframe>
           <a id="music-link" class="btn" href="#" target="_blank" rel="noopener" data-i18n="music_open">在 YouTube Music 開啟</a>
         </div>
-        <div class="dash-card wide" id="dash-budget" hidden>
-          <h3 data-i18n="dash_budget">本月預算</h3>
-          <div class="bud-grid">
-            <div class="bud-col">
-              <div class="bud-hero"><b id="bud-pct">–</b><span data-i18n="bud_used">預算使用率</span></div>
-              <div class="bud-meter" id="bud-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"><i></i></div>
-              <p id="bud-status" class="bud-status"></p>
+        <div class="dash-card wide" id="dash-gh" hidden>
+          <h3>GitHub</h3>
+          <div class="gh-grid">
+            <div class="gh-col">
+          <div class="dash-nums"><div><b id="gh-repos">–</b><span data-i18n="dash_repos">公開專案</span></div><div><b id="gh-act">–</b><span data-i18n="dash_act">近 12 週活動次數</span></div></div>
+          <h4 class="dash-sub" data-i18n="gh_weekly">每週公開活動（近 12 週）</h4>
+          <div id="gh-weeks" class="gh-weeks"></div>
             </div>
-            <div class="bud-col">
-              <h4 class="bud-sub" data-i18n="bud_cats">支出占比</h4>
-              <ul id="bud-cats" class="bud-cats"></ul>
-            </div>
-            <div class="bud-col">
-              <h4 class="bud-sub" id="bud-trend-h" data-i18n="bud_trend_h">每月預算使用率</h4>
-              <div id="bud-trend" class="bud-trend"></div>
+            <div class="gh-col">
+          <h4 class="dash-sub" data-i18n="gh_langs">專案使用的語言</h4>
+          <div id="gh-langs" class="langs"></div>
+          <h4 class="dash-sub" data-i18n="gh_recent">最近更新的專案</h4>
+          <ul id="gh-recent" class="recent"></ul>
             </div>
           </div>
-          <small id="bud-upd"></small>
-          <small data-i18n="bud_note">只顯示比例與趨勢，不含金額與消費明細。</small>
-        </div>
-        <div class="dash-card" id="dash-gh" hidden>
-          <h3>GitHub</h3>
-          <div class="dash-nums"><div><b id="gh-repos">–</b><span data-i18n="dash_repos">公開專案</span></div><div><b id="gh-act">–</b><span data-i18n="dash_act">近 12 週活動次數</span></div></div>
-          <h4 class="bud-sub" data-i18n="gh_weekly">每週公開活動（近 12 週）</h4>
-          <div id="gh-weeks" class="gh-weeks"></div>
-          <h4 class="bud-sub" data-i18n="gh_langs">專案使用的語言</h4>
-          <div id="gh-langs" class="langs"></div>
-          <h4 class="bud-sub" data-i18n="gh_recent">最近更新的專案</h4>
-          <ul id="gh-recent" class="recent"></ul>
           <small id="gh-upd"></small>
           <small data-i18n="gh_note">活動包含 commit、建立分支、開 issue 或 PR 等公開動作。</small>
         </div>
-        <div class="dash-card full" id="dash-uptime" hidden>
+        <div class="dash-card" id="dash-uptime" hidden>
           <div class="up-head">
             <h3 data-i18n="dash_uptime">網站狀態</h3>
             <a id="up-link" class="up-link" href="#" target="_blank" rel="noopener" data-i18n="up_link">查看即時狀態頁 ↗</a>
@@ -101,7 +87,7 @@
   </main>
 
   <footer>© <span id="year"></span> Ray Tsai<small data-i18n="disclaimer">個人專案，僅供展示。股市資料僅供資訊參考，非投資建議。</small></footer>
-  <script src="script.js?v=7"></script>
-  <script src="dashboard.js?v=7"></script>
+  <script src="script.js?v=8"></script>
+  <script src="dashboard.js?v=8"></script>
 </body>
 </html>

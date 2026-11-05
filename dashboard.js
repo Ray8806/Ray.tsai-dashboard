@@ -1,7 +1,7 @@
-// 個人儀表板：天氣（即時）、近況（手動）、股市與 GitHub（Actions 每日產生）、預算比例（手動）、音樂播放清單
+// 個人儀表板：天氣（即時）、近況（手動）、股市、GitHub 與網站狀態（Actions 定時產生）、音樂播放清單
 (function () {
   var $ = function (id) { return document.getElementById(id); };
-  var now = null, gh = null, music = null, stocks = null, budget = null, wx = null, uptime = null;
+  var now = null, gh = null, music = null, stocks = null, wx = null, uptime = null;
   var COLORS = ["#00adef", "#8d9399", "#e0a030", "#5cb85c", "#b06ad8", "#d9534f"];
   var SVGNS = "http://www.w3.org/2000/svg";
 
@@ -113,63 +113,6 @@
     $("stk-upd").textContent = (en() ? "Close as of " : "收盤資料日期：") + (items[0].date || "");
   }
 
-  // ── 預算（只含比例，不含金額）
-  // 使用率 = 對上限的比例 → 進度條；分類 = 一個整體的占比 → 由大到小的橫條；每月使用率 → 長條圖
-  function renderBudget() {
-    var card = $("dash-budget");
-    if (!budget || !budget.updated || !isNum(budget.used_pct)) { card.hidden = true; return; }
-    card.hidden = false;
-    var pct = budget.used_pct;
-    var level = pct > 100 ? "over" : pct >= 80 ? "warn" : "ok";
-    $("bud-pct").textContent = Math.round(pct) + "%";
-    var bar = $("bud-bar"); bar.setAttribute("aria-valuenow", Math.round(Math.min(pct, 100)));
-    bar.dataset.level = level; bar.firstChild.style.width = Math.max(0, Math.min(100, pct)) + "%";
-    var STATUS = {
-      ok:   ["✓", "在預算內", "Within budget"],
-      warn: ["⚠", "接近預算上限", "Approaching the limit"],
-      over: ["✕", "已超出預算", "Over budget"]
-    };
-    var st = $("bud-status"); st.dataset.level = level;
-    st.textContent = STATUS[level][0] + " " + (en() ? STATUS[level][2] : STATUS[level][1]);
-
-    // 分類：橫條由大到小，真實比例（0–100%），數值標在條尾；文字用一般文字色
-    var ul = $("bud-cats"); ul.textContent = "";
-    var cats = (budget.categories || []).filter(function (c) { return isNum(c.pct) && c.pct > 0; })
-      .sort(function (a, b) { return b.pct - a.pct; });
-    cats.forEach(function (c) {
-      var name = en() ? c.en : c.zh;
-      var li = el("li", { title: name + " " + Math.round(c.pct) + "%" });
-      li.appendChild(el("span", { "class": "cat-n" }, name));
-      var track = el("span", { "class": "cat-track", "aria-hidden": "true" });
-      var fill = el("i"); fill.style.width = Math.min(100, c.pct) + "%"; track.appendChild(fill);
-      li.appendChild(track); li.appendChild(el("b", null, Math.round(c.pct) + "%")); ul.appendChild(li);
-    });
-
-    // 每月使用率：長條圖，最新月份用主色、其餘用淡色；虛線以外的細線標出 100% 預算
-    var tr = $("bud-trend"); tr.textContent = "";
-    var pts = (budget.trend || []).filter(function (t) { return isNum(t.used_pct) && t.month; }).slice(-6);
-    var head = $("bud-trend-h");
-    if (pts.length < 2) {
-      head.hidden = true;
-      tr.appendChild(el("p", { "class": "bud-wait" }, en() ? "The monthly chart appears once there are two months of data." : "累積兩個月的資料後，會顯示每月趨勢圖。"));
-    } else {
-      head.hidden = false;
-      var max = Math.max(100, Math.max.apply(null, pts.map(function (t) { return t.used_pct; })));
-      var plot = el("div", { "class": "cols", role: "img", "aria-label": (en() ? "Budget used by month: " : "每月預算使用率：") + pts.map(function (t) { return t.month + " " + Math.round(t.used_pct) + "%"; }).join("，") });
-      var ref = el("span", { "class": "ref" }); ref.style.bottom = (100 / max * 100) + "%"; plot.appendChild(ref);
-      pts.forEach(function (t, i) {
-        var col = el("div", { "class": "col" + (i === pts.length - 1 ? " now" : ""), title: t.month + " " + Math.round(t.used_pct) + "%" });
-        col.appendChild(el("b", null, Math.round(t.used_pct) + "%"));
-        var barEl = el("i"); barEl.style.height = (t.used_pct / max * 100) + "%"; col.appendChild(barEl);
-        var m = Number(t.month.slice(5, 7));
-        col.appendChild(el("span", null, en() ? new Date(2000, m - 1, 1).toLocaleDateString("en-US", { month: "short" }) : m + "月"));
-        plot.appendChild(col);
-      });
-      tr.appendChild(plot);
-    }
-    $("bud-upd").textContent = (en() ? "Updated " : "更新於 ") + fmt(budget.updated);
-  }
-
   // ── GitHub：近 N 週每週活動次數（長條圖）；只標最高週與本週的數字，下方標週起始日
   var ymd = function (d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
   var md = function (d) { return en() ? d.toLocaleDateString("en-US", { month: "short", day: "numeric" }) : (d.getMonth() + 1) + "/" + d.getDate(); };
@@ -239,8 +182,7 @@
   };
   var stInfo = function (s) { return ST[s] || ["?", "狀態未知", "Unknown", "warn"]; };
   var stText = function (s) { var i = stInfo(s); return i[0] + " " + (en() ? i[2] : i[1]); };
-  var wideMq = window.matchMedia ? window.matchMedia("(min-width: 640px)") : null;
-  if (wideMq && wideMq.addEventListener) wideMq.addEventListener("change", function () { renderUptime(); });
+  var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(renderUptime, 150); });
 
   function renderUptime() {
     var card = $("dash-uptime");
@@ -253,7 +195,7 @@
       : ov[0] + " " + (en() ? "Some services are affected: " : "部分服務異常：") + (en() ? ov[2] : ov[1]);
     if (/^https:\/\/[\w.-]+\.betteruptime\.com\/?$/.test(uptime.page_url || "")) $("up-link").href = uptime.page_url;
 
-    var count = wideMq && wideMq.matches ? 90 : 30, seen = {};
+    var count = card.clientWidth >= 640 ? 90 : 30, seen = {};
     var ul = $("up-list"); ul.textContent = "";
     uptime.resources.forEach(function (r) {
       var days = (r.days || []).slice(-count);
@@ -303,14 +245,14 @@
     $("music-link").href = "https://music.youtube.com/playlist?list=" + id;
   }
 
-  function render() { renderWeather(); renderNow(); renderStocks(); renderBudget(); renderGh(); renderMusic(); renderUptime(); }
+  function render() { renderWeather(); renderNow(); renderStocks(); renderGh(); renderMusic(); renderUptime(); }
 
   var prev = window.onLangChange;
   window.onLangChange = function () { if (prev) prev(); render(); };
 
   function load(path) { return fetch(path, { cache: "no-cache" }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); }
-  Promise.all([load("data/now.json"), load("data/github.json"), load("data/music.json"), load("data/stocks.json"), load("data/budget.json"), load("data/uptime.json")])
-    .then(function (res) { now = res[0]; gh = res[1]; music = res[2]; stocks = res[3]; budget = res[4]; uptime = res[5]; render(); });
+  Promise.all([load("data/now.json"), load("data/github.json"), load("data/music.json"), load("data/stocks.json"), load("data/uptime.json")])
+    .then(function (res) { now = res[0]; gh = res[1]; music = res[2]; stocks = res[3]; uptime = res[4]; render(); });
   fetch(WX_URL).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
     .then(function (j) { wx = j; renderWeather(); });
 })();
