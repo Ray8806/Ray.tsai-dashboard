@@ -1,16 +1,15 @@
 {
-  "generated_at": "2026-11-05T16:38:04.193Z",
+  "generated_at": "2026-11-06T01:31:55.919Z",
   "user": "Ray8806",
   "weeks": 12,
   "public_repos": 6,
   "followers": 0,
-  "activity_total": 95,
+  "activity_total": 91,
   "days": {
+    "2026-11-05": 5,
     "2026-11-03": 44,
-    "2026-11-05": 4,
     "2026-11-04": 32,
-    "2026-10-28": 10,
-    "2026-10-05": 5
+    "2026-10-28": 10
   },
   "languages": [
     {
@@ -36,7 +35,7 @@
       "url": "https://github.com/Ray8806/Ray.tsai-dashboard",
       "desc": null,
       "lang": "JavaScript",
-      "pushed_at": "2026-11-05T09:19:38Z"
+      "pushed_at": "2026-11-05T16:38:20Z"
     },
     {
       "name": "Personal-website",
