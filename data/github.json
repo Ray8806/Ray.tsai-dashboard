@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-11T16:27:05.575Z",
+  "generated_at": "2026-11-12T02:14:46.242Z",
   "user": "Ray8806",
   "weeks": 12,
-  "public_repos": 6,
+  "public_repos": 7,
   "followers": 0,
   "activity_total": 96,
   "days": {
@@ -15,6 +15,10 @@
     {
       "name": "JavaScript",
       "count": 2
+    },
+    {
+      "name": "TypeScript",
+      "count": 1
     },
     {
       "name": "Python",
@@ -31,11 +35,18 @@
   ],
   "recent": [
     {
+      "name": "DevOps-Engineer-learning",
+      "url": "https://github.com/Ray8806/DevOps-Engineer-learning",
+      "desc": null,
+      "lang": "TypeScript",
+      "pushed_at": "2026-11-12T02:07:49Z"
+    },
+    {
       "name": "Ray.tsai-dashboard",
       "url": "https://github.com/Ray8806/Ray.tsai-dashboard",
       "desc": null,
       "lang": "JavaScript",
-      "pushed_at": "2026-11-11T01:14:23Z"
+      "pushed_at": "2026-11-11T16:27:21Z"
     },
     {
       "name": "Personal-website",
@@ -50,13 +61,6 @@
       "desc": null,
       "lang": "Python",
       "pushed_at": "2026-11-03T09:18:31Z"
-    },
-    {
-      "name": "andriod",
-      "url": "https://github.com/Ray8806/andriod",
-      "desc": null,
-      "lang": "Java",
-      "pushed_at": "2019-11-28T13:48:46Z"
     }
   ]
 }
