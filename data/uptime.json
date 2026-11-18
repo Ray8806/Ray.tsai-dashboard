@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-17T17:44:34.015Z",
+  "generated_at": "2026-11-18T02:53:12.981Z",
   "page_url": "https://ray-tsai.betteruptime.com/",
   "state": "operational",
   "resources": [
@@ -8,10 +8,6 @@
       "status": "operational",
       "availability": 1,
       "days": [
-        {
-          "day": "2026-08-20",
-          "status": "not_monitored"
-        },
         {
           "day": "2026-08-21",
           "status": "not_monitored"
@@ -366,6 +362,10 @@
         },
         {
           "day": "2026-11-17",
+          "status": "operational"
+        },
+        {
+          "day": "2026-11-18",
           "status": "operational"
         }
       ]
