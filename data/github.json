@@ -1,13 +1,14 @@
 {
-  "generated_at": "2026-11-21T02:11:39.203Z",
+  "generated_at": "2026-11-22T01:15:32.842Z",
   "user": "Ray8806",
   "weeks": 12,
   "public_repos": 7,
   "followers": 0,
-  "activity_total": 234,
+  "activity_total": 247,
   "days": {
-    "2026-11-20": 18,
-    "2026-11-19": 50,
+    "2026-11-21": 3,
+    "2026-11-20": 23,
+    "2026-11-19": 55,
     "2026-11-18": 16,
     "2026-11-17": 7,
     "2026-11-16": 27,
@@ -42,18 +43,18 @@
   ],
   "recent": [
     {
-      "name": "Ray.tsai-dashboard",
-      "url": "https://github.com/Ray8806/Ray.tsai-dashboard",
-      "desc": null,
-      "lang": "JavaScript",
-      "pushed_at": "2026-11-20T17:05:50Z"
-    },
-    {
       "name": "DevOps-Engineer-learning",
       "url": "https://github.com/Ray8806/DevOps-Engineer-learning",
       "desc": null,
       "lang": "TypeScript",
-      "pushed_at": "2026-11-20T09:04:05Z"
+      "pushed_at": "2026-11-21T08:53:19Z"
+    },
+    {
+      "name": "Ray.tsai-dashboard",
+      "url": "https://github.com/Ray8806/Ray.tsai-dashboard",
+      "desc": null,
+      "lang": "JavaScript",
+      "pushed_at": "2026-11-21T02:11:56Z"
     },
     {
       "name": "Personal-website",
